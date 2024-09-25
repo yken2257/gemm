@@ -1,0 +1,29 @@
+From: John Doe =?ISO-2022-JP?B?GyRCIUolOCVnJXMhISVJJSUhPCFLGyhC?= <john@example.com>
+Subject: =?ISO-2022-JP?Q?Re:_=1B$B$4HS$K9T$-$^$;$s$+!)=1B(B?=
+To: =?UTF8?B?44K444Kn44O844Oz44O744OJ44Kl44O8?=
+ <jane@example.co.jp>
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+        boundary="XXXXboundary text"
+
+This is a multipart message in MIME format.
+
+--XXXXboundary text
+Content-Type: text/plain; charset=utf-8
+
+this is the body text
+
+--XXXXboundary text
+Content-Type: text/html; charset=utf-8
+
+<html><body>this is the html body text</body></html>
+
+--XXXXboundary text
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: attachment;
+        filename="test.txt"
+
+this is the attachment text
+
+--XXXXboundary text
+
