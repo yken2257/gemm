@@ -82,19 +82,37 @@ func isEncodedWord(s string) bool {
 	return true
 }
 
+var ValidCharsets = map[string]string{
+	"utf8":      "UTF-8",
+	"iso2022jp": "ISO-2022-JP",
+	"shiftjis":  "Shift_JIS",
+}
+
+func NormalizeCharset(input string) string {
+	input = strings.ToLower(input)
+	input = strings.ReplaceAll(input, "-", "")
+	input = strings.ReplaceAll(input, "_", "")
+	return input
+}
+
 func EncodeHeader(s, charset, encoding string) (string, error) {
 	var encodedBytes []byte
 	var err error
 
+	mappedCharset, ok := ValidCharsets[charset]
+	if !ok {
+		return "", fmt.Errorf("invalid charset")
+	}
+
 	switch charset {
-	case "UTF-8":
+	case "utf8":
 		encodedBytes = []byte(s)
-	case "ISO-2022-JP":
+	case "iso2022jp":
 		encodedBytes, err = japanese.ISO2022JP.NewEncoder().Bytes([]byte(s))
 		if err != nil {
 			return "", err
 		}
-	case "Shift_JIS":
+	case "shiftjis":
 		encodedBytes, err = japanese.ShiftJIS.NewEncoder().Bytes([]byte(s))
 		if err != nil {
 			return "", err
@@ -103,11 +121,12 @@ func EncodeHeader(s, charset, encoding string) (string, error) {
 		return "", fmt.Errorf("invalid charset")
 	}
 
-	switch encoding {
+	upperEncoding := strings.ToUpper(encoding)
+	switch upperEncoding {
 	case "B":
-		return mime.BEncoding.Encode(charset, string(encodedBytes)), nil
+		return mime.BEncoding.Encode(mappedCharset, string(encodedBytes)), nil
 	case "Q":
-		return mime.QEncoding.Encode(charset, string(encodedBytes)), nil
+		return mime.QEncoding.Encode(mappedCharset, string(encodedBytes)), nil
 	default:
 		return "", fmt.Errorf("invalid encoding")
 	}
